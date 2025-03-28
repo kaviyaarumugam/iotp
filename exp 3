@@ -1,0 +1,41 @@
+import dht
+from machine import Pin
+import time
+import random # To simulate slight changes
+
+# Initialize DHT22 Sensor (Temperature Only)
+sensor = dht.DHT22(Pin(22))
+
+# Initialize LED with Resistor
+led = Pin(5, Pin.OUT) # LED connected to GPIO 5
+
+# Temperature Threshold
+temp_threshold = 25 # LED will blink if temperature > 25°C
+
+# Previous temperature reading for comparison
+prev_temp = None
+
+while True:
+    try:
+        sensor.measure()
+        temperature = sensor.temperature() + random.uniform(-3, 3) # Simulate variation
+        
+        # Check for changes before printing
+        if temperature != prev_temp:
+            print(f"Temperature: {temperature:.2f}°C")
+            print("-" * 30)
+            prev_temp = temperature
+        
+        # Blink LED only if temperature exceeds the threshold
+        if temperature > temp_threshold:
+            led.on()
+            time.sleep(0.5)
+            led.off()
+            time.sleep(0.5)
+        else:
+            led.off() # Ensure LED is OFF if temperature is below threshold
+            
+    except OSError as e:
+        print("Failed to read from DHT22 sensor:", e)
+    
+    time.sleep(2) # Delay before next reading
