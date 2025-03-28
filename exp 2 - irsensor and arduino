@@ -1,0 +1,24 @@
+#include <IRremote.h>  // Include IR library
+
+int IRpin = 2;     // IR sensor signal pin
+int LEDpin = 8;    // LED pin
+IRrecv irrecv(IRpin);
+decode_results results;
+
+void setup() {
+    Serial.begin(9600); // Start Serial Monitor
+    irrecv.enableIRIn(); // Start the IR receiver
+    pinMode(LEDpin, OUTPUT); // Set LED as output
+}
+
+void loop() {
+    if (irrecv.decode(&results)) { // Check for a signal
+        Serial.println(results.value, HEX); // Print signal in HEX format
+        if (results.value == 0xFFA25D) { // Example: If "Power" button is pressed
+            digitalWrite(LEDpin, HIGH); // Turn LED ON
+            delay(500);
+            digitalWrite(LEDpin, LOW);  // Turn LED OFF
+        }
+        irrecv.resume(); // Get next signal
+    }
+}
