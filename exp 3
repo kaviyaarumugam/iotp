@@ -1,3 +1,5 @@
+// temp sensor and ras
+
 import dht
 from machine import Pin
 import time
