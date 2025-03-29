@@ -1,0 +1,32 @@
+// IBM connection using node
+
+npm install ibmiotf     // install ibm sdk
+
+//code: device.js
+
+const Client = require('ibmiotf');
+
+const deviceConfig = {
+  org: 'your-org-id',
+  id: 'your-device-id',
+  type: 'your-device-type',
+  authMethod: 'token',
+  authToken: 'your-auth-token'
+};
+
+const deviceClient = new Client.IotfDevice(deviceConfig);
+deviceClient.connect();
+
+deviceClient.on('connect', function () {
+  console.log('Device connected to IBM IoT Platform');
+});
+
+// Handle incoming commands
+deviceClient.on('command', function (commandName, format, payload) {
+  console.log('Received command:', commandName, 'Payload:', payload);
+});
+
+
+
+//to run
+// node device.js
