@@ -1,0 +1,57 @@
+// ARDUINO CODE
+
+#include <SoftwareSerial.h>
+
+SoftwareSerial zigbeeSerial(2, 3); // RX, TX pins on Arduino
+
+void setup() {
+  zigbeeSerial.begin(9600);
+  pinMode(4, OUTPUT); // Relay control pin
+}
+
+void loop() {
+  if (zigbeeSerial.available() > 0) {
+    char command = zigbeeSerial.read();
+
+    if (command == '1') {
+      digitalWrite(4, HIGH); // Turn ON relay (Power Outlet ON)
+    } else if (command == '0') {
+      digitalWrite(4, LOW);  // Turn OFF relay (Power Outlet OFF)
+    }
+  }
+}
+
+
+----------------------------------------------------------------------------------
+
+//RASPBERRY 
+
+// INSTALLATION IN RASPBERRY PI TERMINAL
+pip install zigpy
+nano control_power.py  //OPEN PYTHON SCRIPT
+
+
+//python code
+import zigpy
+from zigpy.quirks import Bus
+from zigpy.zcl.clusters.general import OnOff
+
+# Initialize Zigbee communication
+zigbee = zigpy.application.Controller(application=None, auto_form=True)
+zigbee.startup(auto_form=True)
+
+bus = Bus(zigbee)
+
+# Replace 0x1234 with the actual device IEEE address of the Arduino's Zigbee
+power_outlet = zigbee.get_device(0x1234)
+
+# Function to control power outlet
+def control_power_outlet(state):
+    power_outlet.on_off.send(OnOff.cluster_id, state)
+
+# Example: Turn ON the power outlet
+control_power_outlet(1)
+
+# Example: Turn OFF the power outlet
+control_power_outlet(0)
+
