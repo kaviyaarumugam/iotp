@@ -1,0 +1,69 @@
+//1.1: Sending Text from Arduino to PC
+
+void setup() {
+  Serial.begin(9600); // Start serial communication at 9600 baud
+  Serial.println("Hello, PC! This is Arduino.");
+}
+
+void loop() {
+  // Nothing needed here for this experiment
+}
+
+
+//1.2: Sending Sensor Data to PC
+
+void setup() {
+  Serial.begin(9600); // Start serial communication
+}
+
+void loop() {
+  int sensorValue = analogRead(A0); // Read potentiometer value
+  Serial.print("Sensor Value: ");
+  Serial.println(sensorValue); // Send data to Serial Monitor
+  delay(500); // Wait for half a second
+}
+
+
+//1.3: Sending Data from PC to Arduino
+
+void setup() {
+  Serial.begin(9600); // Start serial communication
+  pinMode(13, OUTPUT); // Set Pin 13 as output
+}
+
+void loop() {
+  if (Serial.available() > 0) { // Check if data is received
+    String command = Serial.readString(); // Read input from Serial Monitor
+
+    if (command == "ON") {
+      digitalWrite(13, HIGH); // Turn LED ON
+      Serial.println("LED is ON");
+    } 
+    else if (command == "OFF") {
+      digitalWrite(13, LOW); // Turn LED OFF
+      Serial.println("LED is OFF");
+    } 
+    else {
+      Serial.println("Invalid Command");
+    }
+  }
+}
+
+
+//Bi-Directional Data Communication
+
+void setup() {
+  Serial.begin(9600); // Start serial communication
+  Serial.println("Enter your name:"); // Ask user for input
+}
+
+void loop() {
+  if (Serial.available() > 0) { // Check if data is available
+    String name = Serial.readString(); // Read user input
+    Serial.print("Hello, ");
+    Serial.print(name);
+    Serial.println("! Welcome to Arduino.");
+    delay(5000); // Wait before asking again
+    Serial.println("Enter your name:");
+  }
+}
