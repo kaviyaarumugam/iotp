@@ -42,3 +42,31 @@ void loop() {
 
   delay(2000);  // Wait 2 seconds before next reading
 }
+
+
+//TINKER CAD TEMP SENSOR
+
+int led_pin = 10;
+int temp_pin = A0;
+void setup()
+{
+  pinMode(led_pin , OUTPUT);
+  Serial.begin(9600);
+    
+}
+void loop()
+{
+  int serialValue = analogRead(temp_pin);
+  int temperature = (serialValue * 100 ) * (5.0/1023.0);
+  Serial.print("Temperature : ");
+  Serial.println(temperature);
+  if(temperature > 70)
+  {
+    digitalWrite(led_pin,HIGH);
+  }
+  else
+  {
+    digitalWrite(led_pin , LOW);
+  }
+  delay(500);
+}
