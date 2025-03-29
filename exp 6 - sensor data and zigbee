@@ -1,0 +1,34 @@
+// Sensor node code
+#include <DHT.h>
+
+#define DHT_PIN 2
+#define DHT_TYPE DHT11
+
+DHT dht(DHT_PIN, DHT_TYPE);
+
+void setup() {
+  Serial.begin(9600); // Initialize Serial communication for Zigbee
+  dht.begin();
+}
+
+void loop() {
+  float temperature = dht.readTemperature(); // Read temperature
+  Serial.print("Temp: ");
+  Serial.println(temperature); // Send temperature data via Zigbee
+  delay(2000); // Wait 2 seconds
+}
+
+
+
+//Coordinator node code
+void setup() {
+  Serial.begin(9600); // Initialize Serial communication for Zigbee
+}
+
+void loop() {
+  if (Serial.available() > 0) { // Check if data is received
+    String data = Serial.readString();
+    Serial.print("Received: ");
+    Serial.println(data); // Display received data
+  }
+}
